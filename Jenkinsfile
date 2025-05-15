@@ -1,47 +1,25 @@
 pipeline {
-
     agent any
-
-    options {
-        buildDiscarder(logRotator(numToKeepStr: '3', artifactNumToKeepStr: '3'))
+    parameters {
+        string(name: 'maven_version', defaultValue: '3.9.3', description: 'Pass the version of Maven')
+        string(name: 'terraform_version', defaultValue: '1.8.5', description: 'Pass the version of Terraform')
     }
-
-    tools {
-        maven 'mvn_3.9.9'  // Make sure this Maven tool is defined in Jenkins global tools
-    }
-
     stages {
-        stage('Code Compilation') {
+        stage('Download Maven') {
             steps {
-                echo 'Starting Code Compilation...'
-                sh 'mvn clean compile'
-                echo 'Code Compilation Completed Successfully!'
+                sh '''
+                cd /var/lib/jenkins/
+                sudo wget https://dlcdn.apache.org/maven/maven-3/${maven_version}/binaries/apache-maven-${maven_version}-bin.tar.gz
+                '''
             }
         }
-
-        stage('Code QA Execution') {
+        stage('Download Terraform') {
             steps {
-                echo 'Running JUnit Test Cases...'
-                sh 'mvn clean test'
-                echo 'JUnit Test Cases Completed Successfully!'
+                sh '''
+                cd /opt
+                sudo wget https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip
+                '''
             }
-        }
-
-        stage('Code Package') {
-            steps {
-                echo 'Creating WAR Artifact...'
-                sh 'mvn clean package'
-                echo 'WAR Artifact Created Successfully!'
-            }
-        }
-    }
-
-    post {
-        success {
-            echo '✅ Build completed successfully.'
-        }
-        failure {
-            echo '❌ Build failed.'
         }
     }
 }
