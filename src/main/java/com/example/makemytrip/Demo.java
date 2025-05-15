@@ -7,7 +7,7 @@ public class Demo {
 
 
         System.out.println("Hello");
-        System.out.println("Hello o");
+        System.out.println("Build update");
 
     }
 }
