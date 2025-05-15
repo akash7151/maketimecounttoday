@@ -7,10 +7,11 @@ pipeline {
     stages {
         stage('Download Maven') {
             steps {
-                sh '''
-                cd /var/lib/jenkins/
-                sudo wget https://dlcdn.apache.org/maven/maven-3/${maven_version}/binaries/apache-maven-${maven_version}-bin.tar.gz
-                '''
+              sh '''
+              cd /var/lib/jenkins/
+              sudo wget https://dlcdn.apache.org/maven/maven-3/3.9.3/binaries/apache-maven-3.9.3-bin.tar.gz
+              '''
+
             }
         }
         stage('Download Terraform') {
